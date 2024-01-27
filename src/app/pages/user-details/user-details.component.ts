@@ -9,7 +9,7 @@ import {
   FormGroup,
   AbstractControl
 } from '@angular/forms';
-import {distinctUntilChanged, map, Observable, of, startWith, Subject, takeUntil} from "rxjs";
+import {distinctUntilChanged, map, Observable, of, startWith, Subject, take, takeUntil} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {
   MatCardModule
@@ -121,7 +121,7 @@ export class UserDetailsComponent implements OnDestroy {
         duration: 1000,
       });
       ref.afterDismissed().pipe(
-        takeUntil(this._destroy$)
+        take(1)
       ).subscribe(() => {
         this.sendingUserData = false;
       });

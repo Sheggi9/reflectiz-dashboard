@@ -24,20 +24,19 @@ export class GeoService {
 
     return forkJoin(reqSet).pipe(
       map(v => v.map((el, i) => {
-          console.log(el);
-          if (el[0]) {
-            return {
-              lat: el[0].lat,
-              lon: el[0].lon,
-              userCount: citiesData[i].counter,
-              name: el[0].name,
-              originalCityName: citiesData[i].city
-            };
-          } else {
-            return null
-          }
-        })
-      )
+        console.log(el);
+        if (el[0]) {
+          return {
+            lat: el[0].lat,
+            lon: el[0].lon,
+            userCount: citiesData[i].counter,
+            name: el[0].name,
+            originalCityName: citiesData[i].city
+          };
+        } else {
+          return null
+        }
+      }))
     )
   }
 }

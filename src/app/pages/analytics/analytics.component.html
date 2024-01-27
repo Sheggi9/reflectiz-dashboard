@@ -85,6 +85,14 @@
     <app-map [dots]="dots" *ngIf="dots"></app-map>
   </gridster-item>
 </gridster>
-
-
+<ng-template #unfoundedCountryRef>
+  @if (unfoundedCountry && unfoundedCountry.length) {
+    <div>
+      <h4>Can't find geo info for this cities</h4>
+      @for (item of unfoundedCountry; track item.city) {
+        <li> {{ item.city }} </li>
+      }
+    </div>
+  }
+</ng-template>
 

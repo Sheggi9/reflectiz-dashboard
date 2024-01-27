@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef, OnDestroy,
-  OnInit,
+  OnInit, TemplateRef,
   ViewChild
 } from '@angular/core';
 import {DatePipe, NgIf} from "@angular/common";
@@ -34,9 +34,10 @@ import {
   mostPickedColorsByAgeConf,
   mostPickedEngineByGenderConf
 } from "@utils";
-import {User, GeoDot} from "@interfaces";
+import {User, GeoDot, GeoRequestDto} from "@interfaces";
 import {GeoService, UserService} from "@services";
-import {Subject, takeUntil} from "rxjs";
+import {Subject, take, takeUntil} from "rxjs";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-analytics',
@@ -68,6 +69,7 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[] = ['birthday', 'email', 'firstName', 'lastName', 'gender', 'address', 'city', 'country', 'amountSeats', 'engine', 'color', 'hobby', 'star'];
   dataSource: MatTableDataSource<User> = new MatTableDataSource<User>();
   private _destroy$ = new Subject();
+  @ViewChild('unfoundedCountryRef') unfoundedCountryTemplate!: TemplateRef<any>;
   @ViewChild('mostPickedColorsByAgeCanvas') mostPickedColorsByAgeChartRef!: ElementRef;
   @ViewChild('mostPickedEngineByGenderCanvas') mostPickedEngineByGenderChartRef!: ElementRef;
   @ViewChild('mostCommonHobbyAmongstVisitorsCanvas') mostCommonHobbyAmongstVisitorsChartRef!: ElementRef;
@@ -77,10 +79,10 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
 
   options!: GridsterConfig;
   dashboard!: Array<GridsterItem>;
-  showMap = false;
   dots: GeoDot[] | undefined;
+  unfoundedCountry: GeoRequestDto[] = [];
 
-  constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService) {}
+  constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService,  private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.options = {
@@ -181,16 +183,31 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
           });
         }
         return acc;
-      }, new Map<string, {
-        counter: number,
-        city: string,
-        query: string
-      }>())
+      }, new Map<string, GeoRequestDto>())
+
+      const requestParam: GeoRequestDto[] = Array.from(reqData.values());
 
       this.geo.geocode(Array.from(reqData.values())).pipe(
         takeUntil(this._destroy$)
       ).subscribe(r => {
-        this.dots = r.filter<GeoDot>((d): d is GeoDot => d !== null) ;
+        this.unfoundedCountry = [];
+        this.dots = r.filter<GeoDot>((d, index): d is GeoDot => {
+          const res = d !== null;
+          if (!res) {
+            this.unfoundedCountry.push(requestParam[index])
+          }
+          return res;
+        });
+
+        const ref = this.snackBar.openFromTemplate(this.unfoundedCountryTemplate, {
+          duration: 1000,
+        });
+        ref.afterDismissed().pipe(
+          take(1)
+        ).subscribe(() => {
+          this.unfoundedCountry = [];
+        });
+
         this.cdr.detectChanges();
       })
     })
