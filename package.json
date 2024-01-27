@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "build-gh": "ng build --configuration development  --base-href \"https://Sheggi9.github.io/reflectiz-dashboard/\"",
+    "deploy": "ngh --dir=dist/reflectiz-app/browser"
   },
   "private": true,
   "dependencies": {
