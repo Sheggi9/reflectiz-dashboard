@@ -186,6 +186,8 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
       }, new Map<string, GeoRequestDto>())
 
       const requestParam: GeoRequestDto[] = Array.from(reqData.values());
+      console.log('requestParam')
+      console.log(requestParam)
 
       this.geo.geocode(Array.from(reqData.values())).pipe(
         takeUntil(this._destroy$)
@@ -199,14 +201,19 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
           return res;
         });
 
-        const ref = this.snackBar.openFromTemplate(this.unfoundedCountryTemplate, {
-          duration: 1000,
-        });
-        ref.afterDismissed().pipe(
-          take(1)
-        ).subscribe(() => {
-          this.unfoundedCountry = [];
-        });
+        console.log('unfoundedCountry')
+        console.log(this.unfoundedCountry)
+
+        if (this.unfoundedCountry.length) {
+          const ref = this.snackBar.openFromTemplate(this.unfoundedCountryTemplate, {
+            duration: 5000,
+          });
+          ref.afterDismissed().pipe(
+            take(1)
+          ).subscribe(() => {
+            this.unfoundedCountry = [];
+          });
+        }
 
         this.cdr.detectChanges();
       })
