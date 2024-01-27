@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -36,6 +36,7 @@ import {
 } from "@utils";
 import {User, GeoDot} from "@interfaces";
 import {GeoService, UserService} from "@services";
+import {Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-analytics',
@@ -63,10 +64,10 @@ import {GeoService, UserService} from "@services";
   styleUrl: './analytics.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AnalyticsComponent implements AfterViewInit, OnInit {
+export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[] = ['birthday', 'email', 'firstName', 'lastName', 'gender', 'address', 'city', 'country', 'amountSeats', 'engine', 'color', 'hobby', 'star'];
   dataSource: MatTableDataSource<User> = new MatTableDataSource<User>();
-
+  private _destroy$ = new Subject();
   @ViewChild('mostPickedColorsByAgeCanvas') mostPickedColorsByAgeChartRef!: ElementRef;
   @ViewChild('mostPickedEngineByGenderCanvas') mostPickedEngineByGenderChartRef!: ElementRef;
   @ViewChild('mostCommonHobbyAmongstVisitorsCanvas') mostCommonHobbyAmongstVisitorsChartRef!: ElementRef;
@@ -77,13 +78,9 @@ export class AnalyticsComponent implements AfterViewInit, OnInit {
   options!: GridsterConfig;
   dashboard!: Array<GridsterItem>;
   showMap = false;
-  dots: GeoDot[] | undefined;
+  dots: (GeoDot | null)[] | undefined;
 
-  constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService) {
-    setInterval(() => {
-      console.log(this.dashboard)
-    }, 2000)
-  }
+  constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService) {}
 
   ngOnInit(): void {
     this.options = {
@@ -151,7 +148,9 @@ export class AnalyticsComponent implements AfterViewInit, OnInit {
     ]
   }
   ngAfterViewInit(): void {
-    this.userService.getUsers().pipe().subscribe(v => {
+    this.userService.getUsers().pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(v => {
       const ctx: CanvasRenderingContext2D = this.mostPickedColorsByAgeChartRef.nativeElement.getContext('2d');
       this.mostPickedColorsByAgeChart = this.createChart<'bar'>(ctx, mostPickedColorsByAgeConf(v));
 
@@ -188,8 +187,10 @@ export class AnalyticsComponent implements AfterViewInit, OnInit {
         query: string
       }>())
 
-      this.geo.geocode(Array.from(reqData.values())).subscribe(r => {
-        this.dots = r;
+      this.geo.geocode(Array.from(reqData.values())).pipe(
+        takeUntil(this._destroy$)
+      ).subscribe(r => {
+        this.dots = r.filter(d => d);
         this.cdr.detectChanges();
       })
     })
@@ -198,4 +199,9 @@ export class AnalyticsComponent implements AfterViewInit, OnInit {
     Chart.register(...registerables);
     return new Chart<T>(ctx, config);
   }
+  ngOnDestroy(): void {
+    this._destroy$.next(null);
+    this._destroy$.complete();
+  }
+
 }

@@ -11,7 +11,7 @@ export class GeoService {
 
   constructor(private http: HttpClient) {}
 
-  geocode(citiesData: GeoRequestDto[]): Observable<GeoDot[]> {
+  geocode(citiesData: GeoRequestDto[]): Observable<(GeoDot | null)[]> {
     const cityQuery = citiesData.map(el => el.query)
     const reqSet =  cityQuery.map(city => {
       const params = {
@@ -24,13 +24,18 @@ export class GeoService {
 
     return forkJoin(reqSet).pipe(
       map(v => v.map((el, i) => {
-          return {
-            lat: el[0].lat,
-            lon: el[0].lon,
-            userCount: citiesData[i].counter,
-            name: el[0].name,
-            originalCityName: citiesData[i].city
-          };
+          console.log(el);
+          if (el[0]) {
+            return {
+              lat: el[0].lat,
+              lon: el[0].lon,
+              userCount: citiesData[i].counter,
+              name: el[0].name,
+              originalCityName: citiesData[i].city
+            };
+          } else {
+            return null
+          }
         })
       )
     )

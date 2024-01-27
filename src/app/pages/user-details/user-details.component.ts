@@ -98,8 +98,6 @@ export class UserDetailsComponent implements OnDestroy {
       hobby: new FormControl(['guitar'], [Validators.required])
     });
 
-    console.log(this.userForm);
-
     (this.userForm.get('birthday') as AbstractControl).valueChanges.pipe(
       takeUntil(this._destroy$),
       distinctUntilChanged()
