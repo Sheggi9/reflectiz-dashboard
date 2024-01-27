@@ -79,10 +79,13 @@
     </section>
   </gridster-item>
   <gridster-item [item]="dashboard[4]">
-    <div *ngIf="!dots" class="spinner">
+    <div *ngIf="dots === undefined" class="spinner">
       <mat-spinner ></mat-spinner>
     </div>
-    <app-map [dots]="dots" *ngIf="dots"></app-map>
+    <div *ngIf="dots?.length === 0" class="spinner">
+      No results
+    </div>
+    <app-map [dots]="dots" *ngIf="dots && dots.length"></app-map>
   </gridster-item>
 </gridster>
 <ng-template #unfoundedCountryRef>

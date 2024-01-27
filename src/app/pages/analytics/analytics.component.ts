@@ -79,7 +79,7 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
 
   options!: GridsterConfig;
   dashboard!: Array<GridsterItem>;
-  dots: GeoDot[] | undefined;
+  dots: GeoDot[] | undefined = undefined;
   unfoundedCountry: GeoRequestDto[] = [];
 
   constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService,  private snackBar: MatSnackBar) {}
@@ -188,35 +188,42 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
       const requestParam: GeoRequestDto[] = Array.from(reqData.values());
       console.log('requestParam')
       console.log(requestParam)
+      if (requestParam.length) {
+        this.geo.geocode(Array.from(reqData.values())).pipe(
+          takeUntil(this._destroy$)
+        ).subscribe(r => {
+          this.unfoundedCountry = [];
+          this.dots = r.filter<GeoDot>((d, index): d is GeoDot => {
+            const res = d !== null;
+            if (!res) {
+              this.unfoundedCountry.push(requestParam[index])
+            }
+            return res;
+          });
 
-      this.geo.geocode(Array.from(reqData.values())).pipe(
-        takeUntil(this._destroy$)
-      ).subscribe(r => {
-        this.unfoundedCountry = [];
-        this.dots = r.filter<GeoDot>((d, index): d is GeoDot => {
-          const res = d !== null;
-          if (!res) {
-            this.unfoundedCountry.push(requestParam[index])
+          console.log('unfoundedCountry')
+          console.log(this.unfoundedCountry)
+
+          console.log('dots')
+          console.log(this.dots)
+
+          if (this.unfoundedCountry.length) {
+            const ref = this.snackBar.openFromTemplate(this.unfoundedCountryTemplate, {
+              duration: 5000,
+            });
+            ref.afterDismissed().pipe(
+              take(1)
+            ).subscribe(() => {
+              this.unfoundedCountry = [];
+            });
           }
-          return res;
-        });
 
-        console.log('unfoundedCountry')
-        console.log(this.unfoundedCountry)
-
-        if (this.unfoundedCountry.length) {
-          const ref = this.snackBar.openFromTemplate(this.unfoundedCountryTemplate, {
-            duration: 5000,
-          });
-          ref.afterDismissed().pipe(
-            take(1)
-          ).subscribe(() => {
-            this.unfoundedCountry = [];
-          });
-        }
-
+          this.cdr.detectChanges();
+        })
+      } else {
+        this.dots = [];
         this.cdr.detectChanges();
-      })
+      }
     })
   }
   createChart<T extends ChartType>(ctx: CanvasRenderingContext2D, config: ChartConfiguration<T>): Chart<T> {
