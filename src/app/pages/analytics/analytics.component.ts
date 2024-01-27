@@ -78,7 +78,7 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
   options!: GridsterConfig;
   dashboard!: Array<GridsterItem>;
   showMap = false;
-  dots: (GeoDot | null)[] | undefined;
+  dots: GeoDot[] | undefined;
 
   constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService) {}
 
@@ -190,7 +190,7 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
       this.geo.geocode(Array.from(reqData.values())).pipe(
         takeUntil(this._destroy$)
       ).subscribe(r => {
-        this.dots = r.filter(d => d);
+        this.dots = r.filter<GeoDot>((d): d is GeoDot => d !== null) ;
         this.cdr.detectChanges();
       })
     })
