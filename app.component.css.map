@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/app.component.scss"],
+  "sourcesContent": [".toolbar {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n\r\n  .nav-btn {\r\n    margin: 0 8px;\r\n    &:first-child {\r\n      margin-left: 0;\r\n    }\r\n    &:last-child {\r\n      margin-right: 0;\r\n    }\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,mBAAA;;AAEA,CAJF,QAIE,CAAA;AACE,UAAA,EAAA;;AACA,CANJ,QAMI,CAFF,OAEE;AACE,eAAA;;AAEF,CATJ,QASI,CALF,OAKE;AACE,gBAAA;;",
+  "names": []
+}
