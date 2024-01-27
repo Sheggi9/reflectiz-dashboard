@@ -1,0 +1,21 @@
+<mat-toolbar class="toolbar" color="primary">
+  <button
+    class="nav-btn"
+    #userDetailsBtnRef="routerLinkActive"
+    mat-raised-button [color]="userDetailsBtnRef.isActive ? '' : 'primary'"
+    routerLink="/user-details"
+    routerLinkActive="active"
+  >User details</button>
+  <button
+    class="nav-btn"
+    #userAnalyticsBtnRef="routerLinkActive"
+    mat-raised-button
+    [color]="userAnalyticsBtnRef.isActive ? '' : 'primary'"
+    routerLink="/analytics"
+    routerLinkActive="active"
+  >Analytics</button>
+</mat-toolbar>
+<div class="body-content">
+  <router-outlet></router-outlet>
+</div>
+<footer class="footer"></footer>

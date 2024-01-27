@@ -1,0 +1,195 @@
+<mat-card class="mat-elevation-z8">
+  <mat-card-header>
+    <mat-card-title>Buyer details</mat-card-title>
+    <mat-card-subtitle>fields marked with * are required</mat-card-subtitle>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <form (ngSubmit)="saveUser()" [formGroup]="userForm" class="user-form">
+      <div class="control-group">
+        <mat-form-field>
+          <mat-label>First name</mat-label>
+          <input [formControlName]="'firstName'" matInput>
+          <mat-error>
+            <ng-container
+              *ngTemplateOutlet="errorChecker; context: { formControlName: 'firstName', alias: 'first name' }"
+            ></ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Last name</mat-label>
+          <input [formControlName]="'lastName'" matInput>
+          <mat-error>
+            <ng-container
+              *ngTemplateOutlet="errorChecker; context: { formControlName: 'lastName', alias: 'last name'  }"
+            ></ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Gender</mat-label>
+        <mat-select [formControlName]="'gender'">
+          <mat-option value="male">Male</mat-option>
+          <mat-option value="female">Female</mat-option>
+        </mat-select>
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'gender' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input matInput [formControlName]="'email'" required>
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'email' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        <input matInput [formControlName]="'birthday'" [max]="maxDate" [matDatepicker]="picker">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+<!--        touchUi or startView="year"-->
+        <mat-datepicker #picker touchUi></mat-datepicker>
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'birthday' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <div class="control-group">
+        <mat-form-field>
+          <mat-label>Address</mat-label>
+          <input [formControlName]="'address'" matInput>
+          <mat-error>
+            <ng-container
+              *ngTemplateOutlet="errorChecker; context: { formControlName: 'address' }"
+            ></ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>City</mat-label>
+          <input [formControlName]="'city'" matInput>
+          <mat-error>
+            <ng-container
+              *ngTemplateOutlet="errorChecker; context: { formControlName: 'city' }"
+            ></ng-container>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Country</mat-label>
+          <input [formControlName]="'country'" matInput>
+          <mat-error>
+            <ng-container
+              *ngTemplateOutlet="errorChecker; context: { formControlName: 'country' }"
+            ></ng-container>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Hobby</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Enter hobby" [formControlName]="'hobby'">
+          @for (hobby of hobbyList; track hobby) {
+            <mat-chip-row
+              (removed)="remove(hobby)"
+              [editable]="true"
+              (edited)="edit(hobby, $event)"
+              [aria-description]="'press enter to edit ' + hobby">
+              {{hobby}}
+              <button matChipRemove [attr.aria-label]="'remove ' + hobby">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+          <input placeholder="Input new hobby..."
+                 #hobbyInput
+                 [formControl]="hobbyInputCtrl"
+                 [matAutocomplete]="auto"
+                 [matChipInputFor]="chipGrid"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)"/>
+
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, hobbyInput)">
+            @for (hobby of filteredHobby | async; track hobby) {
+              <mat-option [value]="hobby">{{hobby}}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-chip-grid>
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'hobby' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="color-control">
+        <mat-label>Favorite color</mat-label>
+        <div  class="color-indicator"><ngx-colors ngx-colors-trigger (click)="$event.stopPropagation()" [formControlName]="'color'"></ngx-colors></div>
+        <input matInput [formControlName]="'color'" [value]="getControlByName('color').value" (input)="updateColor($event.target)">
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'color' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Amount of seats</mat-label>
+        <input matInput type="number" placeholder="Enter a number" [formControlName]="'amountSeats'" [min]="2" [max]="7">
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'amountSeats', alias: 'amount of seats' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Engine type</mat-label>
+        <mat-select [formControlName]="'engine'">
+          <mat-option value="fuel">Fuel</mat-option>
+          <mat-option value="electric">Electric</mat-option>
+        </mat-select>
+        <mat-error>
+          <ng-container
+            *ngTemplateOutlet="errorChecker; context: { formControlName: 'engine' }"
+          ></ng-container>
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+  <mat-divider></mat-divider>
+  <mat-card-actions>
+    <button (click)="saveUser()" [disabled]="userForm.invalid" mat-raised-button color="primary">Send</button>
+  </mat-card-actions>
+  <mat-card-footer>
+    <mat-progress-bar *ngIf="sendingUserData" mode="indeterminate"></mat-progress-bar>
+  </mat-card-footer>
+</mat-card>
+
+<ng-template #errorChecker let-formControlName='formControlName' let-alias='alias'>
+  @if (getControlByName(formControlName).invalid && getControlByName(formControlName).errors) {
+    @if (getControlByName(formControlName).errors!['required']) {
+      {{ (alias ? alias : formControlName)[0].toUpperCase() + (alias ? alias : formControlName).substring(1).toLowerCase() }} is required.
+    } @else if (getControlByName(formControlName).errors!['min']) {
+      Minimum available {{getControlByName(formControlName).errors!['min'].min}}, actual {{getControlByName(formControlName).errors!['min'].actual}}
+    } @else if (getControlByName(formControlName).errors!['max']) {
+      Maximum available {{getControlByName(formControlName).errors!['max'].max}}, actual {{getControlByName(formControlName).errors!['max'].actual}}
+    } @else if (getControlByName(formControlName).errors!['pattern']) {
+      Wrong format.
+    }
+  }
+</ng-template>
+
+<ng-template #customSnackbarTemplate>
+  <div>
+    <h4>The user has been saved!</h4>
+  </div>
+</ng-template>

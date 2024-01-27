@@ -1,0 +1,49 @@
+:host {
+  min-width: 328px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 32px);
+  align-content: center;
+  justify-content: center;
+
+
+  .mat-mdc-card {
+    height: 100%;
+  }
+  .mat-mdc-card-content {
+    overflow: auto;
+    padding: 16px;
+  }
+  .mat-mdc-card-footer {
+    min-height: 4px;
+    max-height: 4px;
+  }
+
+  .mat-mdc-card-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .user-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .color-control {
+    .color-indicator {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+
+  .control-group {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 16px;
+    mat-form-field {
+      flex: 1 1 200px;
+    }
+  }
+}

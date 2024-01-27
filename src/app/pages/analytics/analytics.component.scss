@@ -1,0 +1,32 @@
+:host {
+  width: 100%;
+  height: 100%;
+
+  .chart {
+    width: inherit;
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .table-container {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+  }
+}
+
+
