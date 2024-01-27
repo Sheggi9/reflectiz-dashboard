@@ -186,8 +186,7 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
       }, new Map<string, GeoRequestDto>())
 
       const requestParam: GeoRequestDto[] = Array.from(reqData.values());
-      console.log('requestParam')
-      console.log(requestParam)
+
       if (requestParam.length) {
         this.geo.geocode(Array.from(reqData.values())).pipe(
           takeUntil(this._destroy$)
@@ -200,12 +199,6 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
             }
             return res;
           });
-
-          console.log('unfoundedCountry')
-          console.log(this.unfoundedCountry)
-
-          console.log('dots')
-          console.log(this.dots)
 
           if (this.unfoundedCountry.length) {
             const ref = this.snackBar.openFromTemplate(this.unfoundedCountryTemplate, {
