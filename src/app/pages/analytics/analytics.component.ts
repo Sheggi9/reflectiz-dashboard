@@ -81,7 +81,7 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
   private mostPickedEngineByGenderChart: Chart<'bar'> | undefined;
   private mostCommonHobbyAmongstVisitorsChart: Chart<'doughnut'> | undefined;
 
-  mapIsDraggable = false;
+  mapIsDraggable = true;
   options!: GridsterConfig;
   dashboard!: Array<GridsterItem>;
   dots: GeoDot[] | undefined = undefined;
