@@ -85,7 +85,7 @@
     <div *ngIf="dots?.length === 0" class="spinner">
       No results
     </div>
-    <app-map [dots]="dots" *ngIf="dots && dots.length"></app-map>
+    <app-map [isDraggable]="mapIsDraggable" [dots]="dots" *ngIf="dots && dots.length"></app-map>
   </gridster-item>
 </gridster>
 <ng-template #unfoundedCountryRef>

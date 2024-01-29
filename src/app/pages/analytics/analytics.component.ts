@@ -24,7 +24,7 @@ import {
   GridsterComponent,
   GridsterConfig,
   GridsterItem,
-  GridsterItemComponent,
+  GridsterItemComponent, GridsterItemComponentInterface,
   GridType
 } from "angular-gridster2";
 import {Chart, ChartConfiguration, ChartType, registerables} from "chart.js";
@@ -81,12 +81,23 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
   private mostPickedEngineByGenderChart: Chart<'bar'> | undefined;
   private mostCommonHobbyAmongstVisitorsChart: Chart<'doughnut'> | undefined;
 
+  mapIsDraggable = false;
   options!: GridsterConfig;
   dashboard!: Array<GridsterItem>;
   dots: GeoDot[] | undefined = undefined;
   unfoundedCountry: GeoRequestDto[] = [];
 
   constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService,  private snackBar: MatSnackBar, private analyticsDashboardService: AnalyticsDashboardService) {}
+
+  eventStart(item: GridsterItem, itemComponent: GridsterItemComponentInterface, event: MouseEvent) {
+    console.info('eventStart', item, itemComponent, event);
+    this.mapIsDraggable = false;
+  }
+
+  eventStop(item: GridsterItem, itemComponent: GridsterItemComponentInterface, event: MouseEvent) {
+    console.info('eventStop', item, itemComponent, event);
+    this.mapIsDraggable = true;
+  }
 
   ngOnInit(): void {
 
@@ -96,7 +107,9 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
       displayGrid: DisplayGrid.None,
       pushItems: false,
       draggable: {
-        enabled: false
+        enabled: false,
+        stop: this.eventStop.bind(this),
+        start: this.eventStart.bind(this),
       },
       resizable: {
         enabled: false

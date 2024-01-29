@@ -18,6 +18,14 @@ import {GeoDot} from "@interfaces";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent {
+  _isDraggable = true;
+  @Input() set isDraggable(v: boolean) {
+    this._isDraggable = v;
+    this.updateMapSettings();
+  }
+  get isDraggable() {
+    return this._isDraggable;
+  }
   private map: Map | undefined;
   private _dots!: GeoDot[] ;
   showMap = false;
@@ -43,7 +51,17 @@ export class MapComponent {
   }
   onMapReady(map: Map): void {
     this.map = map;
+    this.updateMapSettings();
     this.addMarkers();
+  }
+  private updateMapSettings() {
+    if (this.map) {
+      if (this.isDraggable) {
+        this.map.dragging.enable();
+      } else {
+        this.map.dragging.disable();
+      }
+    }
   }
   private updateOptions() {
     this.options.center = latLng(parseFloat(this.dots[0].lat), parseFloat(this.dots[0].lon));
