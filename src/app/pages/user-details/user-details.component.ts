@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnDestroy, TemplateRef, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  LOCALE_ID,
+  OnDestroy,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {AsyncPipe, DatePipe, JsonPipe, NgIf, NgTemplateOutlet, TitleCasePipe} from "@angular/common";
 import {
   AbstractControl,
@@ -75,7 +84,7 @@ export class UserDetailsComponent implements OnDestroy {
   hobbyInputCtrl = new FormControl('');
   userForm: FormGroup;
 
-  constructor(@Inject(LOCALE_ID) private locale: string, fb: FormBuilder, private snackBar: MatSnackBar, private userService: UserService) {
+  constructor(@Inject(LOCALE_ID) private locale: string, fb: FormBuilder, private snackBar: MatSnackBar, private userService: UserService, private cdr: ChangeDetectorRef) {
     const currentDate = new Date();
     this.maxDate = new Date(currentDate.getFullYear() - 18, currentDate.getMonth(), currentDate.getDate());
 
@@ -121,6 +130,7 @@ export class UserDetailsComponent implements OnDestroy {
         take(1)
       ).subscribe(() => {
         this.sendingUserData = false;
+        this.cdr.markForCheck();
       });
     })
   }
