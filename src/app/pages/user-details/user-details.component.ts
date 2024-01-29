@@ -1,19 +1,17 @@
-import {Component, Inject, LOCALE_ID, OnDestroy, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnDestroy, TemplateRef, ViewChild} from '@angular/core';
 import {AsyncPipe, DatePipe, JsonPipe, NgIf, NgTemplateOutlet, TitleCasePipe} from "@angular/common";
 import {
+  AbstractControl,
+  FormBuilder,
   FormControl,
-  Validators,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  AbstractControl
+  Validators
 } from '@angular/forms';
 import {distinctUntilChanged, map, Observable, of, startWith, Subject, take, takeUntil} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {
-  MatCardModule
-} from "@angular/material/card";
+import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatButtonModule} from "@angular/material/button";
@@ -24,7 +22,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
-import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatAutocompleteModule, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NgxColorsModule} from "ngx-colors";
 import {UserService} from "@services";
@@ -58,11 +56,10 @@ const COLOR_FORMAT_REGEX = /^#(?:[0-9a-fA-F]{3}){1,2}$|^rgba?\(\s*\d{1,3}\s*,\s*
     JsonPipe,
     NgTemplateOutlet,
     TitleCasePipe,
-
-
   ],
   templateUrl: './user-details.component.html',
-  styleUrl: './user-details.component.scss'
+  styleUrl: './user-details.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailsComponent implements OnDestroy {
   @ViewChild('customSnackbarTemplate') customSnackbarTemplate!: TemplateRef<any>;

@@ -1,4 +1,8 @@
 <mat-toolbar class="toolbar" color="primary">
+  @if (dashboardIsActive) {
+    <mat-slide-toggle class="analytic-panel-btn" color="primary" [formControl]="enableDrag">Widget draggable</mat-slide-toggle>
+    <mat-slide-toggle class="analytic-panel-btn" color="primary" [formControl]="enableResize">Widget resizable</mat-slide-toggle>
+  }
   <button
     class="nav-btn"
     #userDetailsBtnRef="routerLinkActive"
@@ -14,6 +18,7 @@
     routerLink="/analytics"
     routerLinkActive="active"
   >Analytics</button>
+
 </mat-toolbar>
 <div class="body-content">
   <router-outlet></router-outlet>

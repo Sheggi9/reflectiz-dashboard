@@ -36,8 +36,12 @@ import {
 } from "@utils";
 import {User, GeoDot, GeoRequestDto} from "@interfaces";
 import {GeoService, UserService} from "@services";
-import {Subject, take, takeUntil} from "rxjs";
+import {combineLatest, combineLatestAll, Subject, take, takeUntil} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AnalyticsDashboardService} from "../../services/analytics-dashboard.service";
+
+type isDraggable = boolean;
+type isResizable = boolean;
 
 @Component({
   selector: 'app-analytics',
@@ -82,9 +86,11 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
   dots: GeoDot[] | undefined = undefined;
   unfoundedCountry: GeoRequestDto[] = [];
 
-  constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService,  private snackBar: MatSnackBar) {}
+  constructor(private userService: UserService, private cdr: ChangeDetectorRef, private geo: GeoService,  private snackBar: MatSnackBar, private analyticsDashboardService: AnalyticsDashboardService) {}
 
   ngOnInit(): void {
+
+    this.analyticsDashboardService.widgetsIsActive.next(true);
     this.options = {
       gridType: GridType.Fit,
       displayGrid: DisplayGrid.None,
@@ -148,6 +154,22 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
         "x": 5
       }
     ]
+
+    const {widgetsIsDraggable, widgetsIsResizable} = this.analyticsDashboardService;
+
+    combineLatest([widgetsIsDraggable, widgetsIsResizable]).pipe(
+      takeUntil(this._destroy$)
+    ).subscribe((v: [isDraggable, isResizable])=> {
+      const isDraggable = v[0];
+      const isResizable = v[1];
+
+      this.options.draggable!.enabled = isDraggable
+      this.options.resizable!.enabled = isResizable
+
+      if (this.options.api) {
+        this.options.api.optionsChanged!();
+      }
+    })
   }
   ngAfterViewInit(): void {
     this.userService.getUsers().pipe(
@@ -224,8 +246,8 @@ export class AnalyticsComponent implements AfterViewInit, OnInit, OnDestroy {
     return new Chart<T>(ctx, config);
   }
   ngOnDestroy(): void {
+    this.analyticsDashboardService.widgetsIsActive.next(false)
     this._destroy$.next(null);
     this._destroy$.complete();
   }
-
 }
