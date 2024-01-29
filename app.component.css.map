@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["src/app/app.component.scss"],
-  "sourcesContent": [".toolbar {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n\r\n  .nav-btn {\r\n    margin: 0 8px;\r\n    &:first-child {\r\n      margin-left: 0;\r\n    }\r\n    &:last-child {\r\n      margin-right: 0;\r\n    }\r\n  }\r\n}\r\n.analytic-panel-btn {\r\n  margin-right: 16px;\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,mBAAA;;AAEA,CAJF,QAIE,CAAA;AACE,UAAA,EAAA;;AACA,CANJ,QAMI,CAFF,OAEE;AACE,eAAA;;AAEF,CATJ,QASI,CALF,OAKE;AACE,gBAAA;;AAIN,CAAA;AACE,gBAAA;;",
+  "sourcesContent": [":host ::ng-deep {\r\n  .toolbar {\r\n    display: flex;\r\n    justify-content: flex-end;\r\n\r\n    .analytic-panel-btn {\r\n      margin-right: 16px;\r\n    }\r\n\r\n    .widgets-settings {\r\n      display: flex;\r\n      &-title {\r\n        margin-right: 8px;\r\n      }\r\n      label {\r\n        color: white;\r\n      }\r\n    }\r\n\r\n    .nav-btn {\r\n      margin: 0 8px;\r\n\r\n      &:first-child {\r\n        margin-left: 0;\r\n      }\r\n      &:last-child {\r\n        margin-right: 0;\r\n      }\r\n    }\r\n  }\r\n}\r\n"],
+  "mappings": ";AACE,MAAA,UAAA,CAAA;AACE,WAAA;AACA,mBAAA;;AAEA,MAAA,UAAA,CAJF,QAIE,CAAA;AACE,gBAAA;;AAGF,MAAA,UAAA,CARF,QAQE,CAAA;AACE,WAAA;;AACA,MAAA,UAAA,CAVJ,QAUI,CAAA;AACE,gBAAA;;AAEF,MAAA,UAAA,CAbJ,QAaI,CALF,iBAKE;AACE,SAAA;;AAIJ,MAAA,UAAA,CAlBF,QAkBE,CAAA;AACE,UAAA,EAAA;;AAEA,MAAA,UAAA,CArBJ,QAqBI,CAHF,OAGE;AACE,eAAA;;AAEF,MAAA,UAAA,CAxBJ,QAwBI,CANF,OAME;AACE,gBAAA;;",
   "names": []
 }
