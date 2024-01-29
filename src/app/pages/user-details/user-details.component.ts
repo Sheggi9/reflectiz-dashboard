@@ -130,7 +130,8 @@ export class UserDetailsComponent implements OnDestroy {
         take(1)
       ).subscribe(() => {
         this.sendingUserData = false;
-        this.cdr.markForCheck();
+        this.userForm.reset()
+        this.cdr.detectChanges();
       });
     })
   }
