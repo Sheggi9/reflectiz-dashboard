@@ -1,17 +1,31 @@
-.toolbar {
-  display: flex;
-  justify-content: flex-end;
+:host ::ng-deep {
+  .toolbar {
+    display: flex;
+    justify-content: flex-end;
 
-  .nav-btn {
-    margin: 0 8px;
-    &:first-child {
-      margin-left: 0;
+    .analytic-panel-btn {
+      margin-right: 16px;
     }
-    &:last-child {
-      margin-right: 0;
+
+    .widgets-settings {
+      display: flex;
+      &-title {
+        margin-right: 8px;
+      }
+      label {
+        color: white;
+      }
+    }
+
+    .nav-btn {
+      margin: 0 8px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
-}
-.analytic-panel-btn {
-  margin-right: 16px;
 }

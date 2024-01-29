@@ -1,7 +1,12 @@
 <mat-toolbar class="toolbar" color="primary">
   @if (dashboardIsActive) {
-    <mat-slide-toggle class="analytic-panel-btn" color="primary" [formControl]="enableDrag">Widget draggable</mat-slide-toggle>
-    <mat-slide-toggle class="analytic-panel-btn" color="primary" [formControl]="enableResize">Widget resizable</mat-slide-toggle>
+    <div class="widgets-settings">
+      <div class="widgets-settings-controls">
+        <mat-slide-toggle class="analytic-panel-btn" color="primary" [formControl]="enableDrag">Draggable</mat-slide-toggle>
+        <mat-slide-toggle class="analytic-panel-btn" color="primary" [formControl]="enableResize">Resizable</mat-slide-toggle>
+      </div>
+    </div>
+
   }
   <button
     class="nav-btn"
