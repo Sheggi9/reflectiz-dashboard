@@ -42,6 +42,14 @@ export class MapComponent {
     maxBoundsViscosity: 1.0,
   };
 
+  constructor() {
+    setInterval(() => {
+      if (this.map) {
+        this.map.invalidateSize();
+      }
+    } , 1000)
+  }
+
   @Input() set dots(d: GeoDot[]) {
     this._dots = d.sort((a, b) => b.userCount - a.userCount)!;
     this.updateOptions();
@@ -61,6 +69,7 @@ export class MapComponent {
       } else {
         this.map.dragging.disable();
       }
+      this.map.invalidateSize();
     }
   }
   private updateOptions() {
