@@ -36,10 +36,10 @@ export class MapComponent {
       }),
     ],
     maxZoom: 15,
-    minZoom: 1.5,
-    zoom: 1,
+    minZoom: 2.5,
+    zoom: 2.5,
     maxBounds: latLngBounds(latLng(-90, -180), latLng(90, 180)),
-    maxBoundsViscosity: 1.0,
+    maxBoundsViscosity: 0.5,
   };
 
   constructor() {
